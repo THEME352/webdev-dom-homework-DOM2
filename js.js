@@ -90,3 +90,63 @@ function handleLikeButtonClick(event) {
 likeButtons.forEach((button) => {
   button.addEventListener('click', handleLikeButtonClick);
 });
+const commentList = document.querySelectorAll('.comment');
+const commentForm = document.getElementById('comment-form');
+const commentInput = document.getElementById('comment');
+
+// Обрабатываем клик по комментарию
+commentList.forEach(commentItem => {
+  commentItem.addEventListener('click', () => {
+    // Получаем имя и текст комментария
+    const author = commentItem.querySelector('.comment-header div:first-child').textContent.trim();
+    const text = commentItem.querySelector('.comment-text').textContent.trim();
+    
+    // Заполняем форму данными комментария
+    commentInput.value = `>${author}:\n${text}`;
+    
+    // Перемещаем фокус на поле для ввода комментария
+    commentInput.focus();
+  });
+});
+
+// Обрабатываем отправку формы
+commentForm.addEventListener('submit', event => {
+  event.preventDefault();
+  
+  // Получаем введенные данные из поля формы
+  const inputValue = commentInput.value.trim();
+  
+  // Очищаем поле формы
+  commentInput.value = '';
+  
+  // Разделяем имя и комментарий с помощью перевода строки
+  const [author, text] = inputValue.split('\n', 2);
+  
+  // Создаем новый элемент комментария
+  const newComment = document.createElement('li');
+  newComment.classList.add('comment');
+  
+  const commentHeader = document.createElement('div');
+  commentHeader.classList.add('comment-header');
+  
+  const authorDiv = document.createElement('div');
+  authorDiv.textContent = author;
+  
+  const dateDiv = document.createElement('div');
+  const currentDate = new Date();
+  dateDiv.textContent = currentDate.toLocaleString();
+  
+  commentHeader.appendChild(authorDiv);
+  commentHeader.appendChild(dateDiv);
+  
+  const commentBody = document.createElement('div');
+  commentBody.classList.add('comment-body');
+  commentBody.textContent = text;
+  
+  newComment.appendChild(commentHeader);
+  newComment.appendChild(commentBody);
+  
+  // Добавляем новый комментарий к списку
+  const commentList = document.getElementById('comment-list');
+  commentList.appendChild(newComment);
+});
